@@ -19,7 +19,9 @@ import GameCard from '../components/GameCard.astro';
 import { getDatabase } from '../lib/db';
 import { getAllGames } from '../lib/games';
 
+/** Props for the game listing page. */
 interface Props {
+  /** Heading displayed above the game list. */
   title: string;
 }
 
@@ -110,6 +112,9 @@ There is no Svelte/React layer. When a page genuinely needs client behaviour, ad
 
 - Use TypeScript for type-safe props
 - Define `Props` interface in frontmatter
+- For every reusable component in `src/components/` or `src/layouts/`, add a TSDoc/JSDoc summary to its `Props` interface that explains the component contract
+- Document each prop whose meaning, default, accepted values, or interaction with other props is not obvious from its name and type
+- Keep prop documentation with the interface so consumers can understand the API without reading the template implementation
 - Type component imports and helper return values
 - Run `npx astro sync` to (re)generate route/content types before linting or type-checking
 - `.astro` files are type-checked by `npm run typecheck:astro` (which runs `astro sync` then `astro check`), on the classic `typescript` package. The pure TypeScript in `db/`, `src/lib/`, and `src/types/` is type-checked separately by `npm run typecheck` (the native TS 7 compiler, `tsgo`), which does **not** process `.astro` files.
