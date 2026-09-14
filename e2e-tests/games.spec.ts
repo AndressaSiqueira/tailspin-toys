@@ -22,6 +22,24 @@ test.describe('Game Listing and Navigation', () => {
       await expect(gameCards.first().getByTestId('game-title')).toBeVisible();
       await expect(gameCards.first().getByTestId('game-title')).not.toBeEmpty();
     });
+
+    await test.step('Verify every game card has an accessible visual star rating', async () => {
+      const gameCards = page.getByTestId('game-card');
+      const gameRatings = page.getByTestId('game-rating');
+      const gameCardCount = await gameCards.count();
+
+      await expect(gameRatings).toHaveCount(gameCardCount);
+
+      for (let index = 0; index < gameCardCount; index++) {
+        const gameRating = gameCards.nth(index).getByTestId('game-rating');
+        await expect(gameRating).toHaveCount(1);
+        await expect(gameRating).toHaveAttribute(
+          'aria-label',
+          /^Rated \d\.\d out of 5 stars$|^Not yet rated$/,
+        );
+        await expect(gameRating).toContainText(/[★☆½]/);
+      }
+    });
   });
 
   test('should navigate to correct game details page when clicking on a game', async ({ page }) => {
@@ -69,6 +87,15 @@ test.describe('Game Listing and Navigation', () => {
       const gameDescription = page.getByTestId('game-details-description');
       await expect(gameDescription).toBeVisible();
       await expect(gameDescription).not.toBeEmpty();
+    });
+
+    await test.step('Verify the visual star rating has an accessible label', async () => {
+      const gameRating = page.getByTestId('game-rating');
+      await expect(gameRating).toHaveAttribute(
+        'aria-label',
+        /^Rated \d\.\d out of 5 stars$|^Not yet rated$/,
+      );
+      await expect(gameRating).toContainText(/[★☆½]/);
     });
 
     await test.step('Verify publisher or category information is present', async () => {
