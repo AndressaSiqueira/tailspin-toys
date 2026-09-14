@@ -6,13 +6,20 @@ interface Props {
 }
 
 const { rating } = Astro.props;
+const displayRating = rating === null ? null : clampRating(rating);
+const accessibleLabel = displayRating === null
+    ? 'Not yet rated'
+    : `Rated ${displayRating.toFixed(1)} out of 5 stars`;
 ---
 
-{rating !== null && (
-    <div class="flex items-center">
-        <span class="bg-blue-500/20 text-blue-400 text-sm px-3 py-1 rounded-full" data-testid="game-rating">
-            <span class="text-yellow-400">{formatStarRating(rating)}</span>
-            {clampRating(rating).toFixed(1)}
-        </span>
-    </div>
-)}
+<div class="flex items-center">
+    <span
+        class="inline-flex items-center gap-1.5 rounded-full bg-blue-500/20 px-3 py-1 text-sm text-blue-300"
+        role="img"
+        aria-label={accessibleLabel}
+        data-testid="game-rating"
+    >
+        <span class="tracking-wide text-yellow-400" aria-hidden="true">{formatStarRating(rating)}</span>
+        <span aria-hidden="true">{displayRating === null ? 'Not yet rated' : displayRating.toFixed(1)}</span>
+    </span>
+</div>
